@@ -321,7 +321,7 @@ export default function CareerPage() {
       {view === "selection" && (
         <main className="flex-1 overflow-auto p-6">
           <div className="max-w-5xl mx-auto space-y-6">
-            <div className="text-center space-y-4 mb-8">
+            <div className="text-center space-y-4 mb-">
               <h1 className="text-4xl font-bold tracking-tight">Choose Your Career Path</h1>
               <p className="text-xl text-muted-foreground">
                 Select a role to start your journey or let our AI mentor guide you.
