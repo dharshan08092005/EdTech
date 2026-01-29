@@ -442,268 +442,199 @@ export default function Profile() {
             </motion.div>
 
             {/* Enhanced Leaderboard Section */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.25 }}
-            >
-              <Card className="border-border/50 bg-gradient-to-br from-card via-card/95 to-card/90 backdrop-blur-sm shadow-2xl overflow-hidden relative">
-                <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/5 via-transparent to-orange-500/5 pointer-events-none" />
-                <CardHeader className="relative z-10 border-b border-border/50 pb-4">
-                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                    <div className="flex items-center gap-4">
-                      <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-yellow-500/20 via-orange-500/20 to-yellow-500/10 flex items-center justify-center shadow-lg ring-2 ring-yellow-500/20">
-                        <Trophy className="h-7 w-7 text-yellow-600" />
-                      </div>
-                      <div>
-                        <CardTitle className="text-2xl font-bold flex items-center gap-2">
-                          Leaderboard
-                          {leaderboard.length > 0 && (
-                            <Badge variant="secondary" className="text-xs">
-                              {leaderboard.length} Students
-                            </Badge>
-                          )}
-                        </CardTitle>
-                        <CardDescription className="text-base mt-1">
-                          Rankings based on activity points and course completions
-                        </CardDescription>
-                      </div>
-                    </div>
-                    {userRankEntry && (
-                      <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary/10 border border-primary/20">
-                        <BarChart3 className="h-4 w-4 text-primary" />
-                        <span className="text-sm font-semibold text-primary">
-                          Your Rank: #{userRankEntry.rank}
-                        </span>
-                      </div>
+            <div className="border-yellow-500/20 border-2 bg-gradient-to-br from-yellow-500/5 via-transparent to-orange-500/5 rounded-lg shadow-sm p-6">
+              <div className="flex items-center justify-between mb-6 ">
+                <div className="flex items-center gap-2">
+                  <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-yellow-500/20 via-orange-500/20 to-yellow-500/10 flex items-center justify-center shadow-lg ring-2 ring-yellow-500/20">
+                    <Trophy className="h-7 w-7 text-yellow-600" />
+                  </div>
+                  <div>
+                    <h2 className="text-2xl font-bold text-gray-900">Leaderboard</h2>
+                    {leaderboard.length > 0 && (
+                      <p className="text-sm text-gray-500 mt-1">{leaderboard.length} Students</p>
                     )}
                   </div>
-                </CardHeader>
-                <CardContent className="relative z-10">
-                  {leaderboardLoading ? (
-                    <div className="text-center py-12">
-                      <div className="inline-flex items-center gap-3 text-muted-foreground">
-                        <div className="w-5 h-5 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-                        <span>Loading leaderboard...</span>
-                      </div>
-                    </div>
-                  ) : leaderboard.length === 0 ? (
-                    <div className="text-center py-12">
-                      <Trophy className="h-12 w-12 mx-auto mb-4 text-muted-foreground/50" />
-                      <p className="text-muted-foreground">No leaderboard data available</p>
-                      <p className="text-sm text-muted-foreground/70 mt-2">Start learning to appear on the leaderboard!</p>
-                    </div>
-                  ) : (
-                    <ScrollArea className="h-[600px] pr-4">
-                      <div className="space-y-2">
-                        {/* Enhanced Top 3 Podium */}
-                        {leaderboard.slice(0, 3).length > 0 && (
-                          <div className="grid grid-cols-3 gap-4 mb-8">
-                            {leaderboard.slice(0, 3).map((entry, index) => {
-                              const isCurrentUser = entry.userId === user?.userId;
-                              const isFirst = entry.rank === 1;
-                              return (
-                                <motion.div
-                                  key={entry.userId}
-                                  initial={{ opacity: 0, scale: 0.9, y: 20 }}
-                                  animate={{ opacity: 1, scale: 1, y: isFirst ? -10 : 0 }}
-                                  transition={{ 
-                                    duration: 0.4, 
-                                    delay: 0.3 + index * 0.1,
-                                    type: "spring",
-                                    stiffness: 200
-                                  }}
-                                  whileHover={{ scale: 1.05, y: isFirst ? -15 : -5 }}
-                                  className={cn(
-                                    "relative rounded-xl border-2 p-5 text-center transition-all duration-300 overflow-hidden",
-                                    entry.rank === 1 && "bg-gradient-to-br from-yellow-100 via-yellow-50 to-orange-50 dark:from-yellow-950/40 dark:via-yellow-950/30 dark:to-orange-950/30 border-yellow-400 shadow-2xl",
-                                    entry.rank === 2 && "bg-gradient-to-br from-gray-100 via-gray-50 to-slate-50 dark:from-gray-950/40 dark:via-gray-950/30 dark:to-slate-950/30 border-gray-400 shadow-xl",
-                                    entry.rank === 3 && "bg-gradient-to-br from-orange-100 via-orange-50 to-amber-50 dark:from-orange-950/40 dark:via-orange-950/30 dark:to-amber-950/30 border-orange-400 shadow-xl",
-                                    isCurrentUser && "ring-4 ring-primary/50 ring-offset-2"
-                                  )}
-                                >
-                                  {/* Decorative background elements */}
-                                  <div className={cn(
-                                    "absolute top-0 left-0 right-0 h-20 opacity-20",
-                                    entry.rank === 1 && "bg-gradient-to-b from-yellow-300/30 to-transparent",
-                                    entry.rank === 2 && "bg-gradient-to-b from-gray-300/30 to-transparent",
-                                    entry.rank === 3 && "bg-gradient-to-b from-orange-300/30 to-transparent"
-                                  )} />
-                                  
-                                  {entry.rank === 1 && (
-                                    <motion.div
-                                      animate={{ rotate: [0, 10, -10, 0] }}
-                                      transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
-                                    >
-                                      <Crown className="absolute -top-3 left-1/2 -translate-x-1/2 h-8 w-8 text-yellow-500 drop-shadow-lg" />
-                                    </motion.div>
-                                  )}
-                                  {entry.rank === 2 && (
-                                    <Medal className="absolute -top-3 left-1/2 -translate-x-1/2 h-8 w-8 text-gray-400 drop-shadow-lg" />
-                                  )}
-                                  {entry.rank === 3 && (
-                                    <Medal className="absolute -top-3 left-1/2 -translate-x-1/2 h-8 w-8 text-orange-600 drop-shadow-lg" />
-                                  )}
-                                  
-                                  <Avatar className={cn(
-                                    "h-16 w-16 mx-auto mb-3 border-2 shadow-lg relative z-10",
-                                    entry.rank === 1 && "border-yellow-400 ring-2 ring-yellow-300/50",
-                                    entry.rank === 2 && "border-gray-400 ring-2 ring-gray-300/50",
-                                    entry.rank === 3 && "border-orange-400 ring-2 ring-orange-300/50"
-                                  )}>
-                                    <AvatarFallback className={cn(
-                                      "font-bold text-lg",
-                                      entry.rank === 1 && "bg-gradient-to-br from-yellow-400 to-yellow-600 text-white",
-                                      entry.rank === 2 && "bg-gradient-to-br from-gray-400 to-gray-600 text-white",
-                                      entry.rank === 3 && "bg-gradient-to-br from-orange-400 to-orange-600 text-white",
-                                      isCurrentUser && "ring-2 ring-primary"
-                                    )}>
-                                      {entry.name.charAt(0).toUpperCase()}
-                                    </AvatarFallback>
-                                  </Avatar>
-                                  
-                                  <p className="font-bold text-sm mb-2 truncate w-full relative z-10">{entry.name}</p>
-                                  
-                                  {isCurrentUser && (
-                                    <Badge variant="outline" className="text-xs mb-2 border-primary text-primary bg-primary/10 font-semibold">
-                                      You
-                                    </Badge>
-                                  )}
-                                  
-                                  <Badge variant="outline" className={cn(
-                                    "text-xs mb-3 font-bold",
-                                    entry.rank === 1 && "bg-yellow-100 border-yellow-400 text-yellow-800 dark:bg-yellow-900/50 dark:text-yellow-300",
-                                    entry.rank === 2 && "bg-gray-100 border-gray-400 text-gray-800 dark:bg-gray-900/50 dark:text-gray-300",
-                                    entry.rank === 3 && "bg-orange-100 border-orange-400 text-orange-800 dark:bg-orange-900/50 dark:text-orange-300"
-                                  )}>
-                                    Rank #{entry.rank}
-                                  </Badge>
-                                  
-                                  <div className="space-y-2 mt-4 relative z-10">
-                                    <div className="flex items-center justify-center gap-1.5 p-2 rounded-lg bg-background/50">
-                                      <Zap className="h-4 w-4 text-yellow-500" />
-                                      <span className="font-bold text-sm">{entry.activityPoints}</span>
-                                      <span className="text-xs text-muted-foreground">pts</span>
-                                    </div>
-                                    <div className="flex items-center justify-center gap-1.5 text-xs text-muted-foreground">
-                                      <BookOpen className="h-3 w-3" />
-                                      <span>{entry.completedCourses} {entry.completedCourses === 1 ? 'course' : 'courses'}</span>
-                                    </div>
-                                  </div>
-                                </motion.div>
-                              );
-                            })}
-                          </div>
-                        )}
+                </div>
+                <p className="text-sm text-gray-600">Rankings based on activity points and course completions</p>
+              </div>
 
-                        {/* Full Leaderboard List */}
-                        {leaderboard.map((entry, index) => {
-                          const isCurrentUser = entry.userId === user?.userId;
-                          const isTop3 = entry.rank <= 3;
+              {userRankEntry && (
+                <div className="mb-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
+                  <p className="text-sm font-medium text-blue-900">
+                    Your Rank: #{userRankEntry.rank}
+                  </p>
+                </div>
+              )}
 
-                          // Skip top 3 as they're already shown above
-                          if (isTop3) return null;
+              {leaderboardLoading ? (
+                <div className="text-center py-12">
+                  <p className="text-gray-500">Loading leaderboard...</p>
+                </div>
+              ) : leaderboard.length === 0 ? (
+                <div className="text-center py-12">
+                  <p className="text-gray-500 mb-2">No leaderboard data available</p>
+                  <p className="text-sm text-gray-400">Start learning to appear on the leaderboard!</p>
+                </div>
+              ) : (
+                <div className="space-y-6">
+                  {/* Enhanced Top 3 Podium */}
+                  {leaderboard.slice(0, 3).length > 0 && (
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                      {leaderboard.slice(0, 3).map((entry, index) => {
+                        const isCurrentUser = entry.userId === user?.userId;
+                        const isFirst = entry.rank === 1;
+                        
+                        return (
+                          <div
+                            key={entry.userId}
+                            className={`relative overflow-hidden rounded-xl p-6 transition-all ${
+                              isFirst
+                                ? 'bg-gradient-to-br from-yellow-50 to-yellow-100 border-2 border-yellow-400 md:order-1'
+                                : entry.rank === 2
+                                ? 'bg-gradient-to-br from-gray-50 to-gray-100 border-2 border-gray-400 md:order-0'
+                                : 'bg-gradient-to-br from-orange-50 to-orange-100 border-2 border-orange-400 md:order-2'
+                            } ${isCurrentUser ? 'ring-4 ring-blue-500 ring-offset-2' : ''}`}
+                          >
+                            {/* Decorative background elements */}
+                            <div className="absolute top-0 right-0 w-32 h-32 opacity-10">
+                              {entry.rank === 1 && (
+                                <svg viewBox="0 0 100 100" className="w-full h-full fill-current text-yellow-600">
+                                  <path d="M50 10 L61 39 L92 39 L67 58 L78 87 L50 68 L22 87 L33 58 L8 39 L39 39 Z" />
+                                </svg>
+                              )}
+                              {entry.rank === 2 && (
+                                <svg viewBox="0 0 100 100" className="w-full h-full fill-current text-gray-600">
+                                  <circle cx="50" cy="50" r="40" />
+                                </svg>
+                              )}
+                              {entry.rank === 3 && (
+                                <svg viewBox="0 0 100 100" className="w-full h-full fill-current text-orange-600">
+                                  <polygon points="50,10 90,90 10,90" />
+                                </svg>
+                              )}
+                            </div>
 
-                          return (
-                            <motion.div
-                              key={entry.userId}
-                              initial={{ opacity: 0, x: -20 }}
-                              animate={{ opacity: 1, x: 0 }}
-                              transition={{ duration: 0.3, delay: 0.4 + index * 0.02 }}
-                            >
+                            <div className="relative z-10 flex flex-col items-center text-center">
                               <div
-                                className={cn(
-                                  "flex items-center gap-4 p-4 rounded-lg border transition-all hover:shadow-md",
-                                  isCurrentUser
-                                    ? "bg-primary/10 border-primary/50 shadow-md"
-                                    : "bg-card border-border/50 hover:border-primary/30",
-                                  isTop3 && "bg-gradient-to-r from-primary/5 via-card to-card"
-                                )}
+                                className={`w-20 h-20 rounded-full flex items-center justify-center text-2xl font-bold mb-3 ${
+                                  isFirst
+                                    ? 'bg-gradient-to-br from-yellow-400 to-yellow-600 text-white'
+                                    : entry.rank === 2
+                                    ? 'bg-gradient-to-br from-gray-300 to-gray-500 text-white'
+                                    : 'bg-gradient-to-br from-orange-400 to-orange-600 text-white'
+                                }`}
                               >
-                                {/* Rank */}
-                                <div className="w-10 flex items-center justify-center">
-                                  <span className={cn(
-                                    "text-sm font-bold",
-                                    isCurrentUser ? "text-primary" : "text-muted-foreground"
-                                  )}>
-                                    #{entry.rank}
-                                  </span>
+                                {entry.name.charAt(0).toUpperCase()}
+                              </div>
+
+                              <h3 className="font-bold text-lg text-gray-900 mb-1">
+                                {entry.name}
+                              </h3>
+
+                              {isCurrentUser && (
+                                <span className="inline-block px-2 py-1 bg-blue-500 text-white text-xs rounded-full mb-2">
+                                  You
+                                </span>
+                              )}
+
+                              <p className="text-sm text-gray-600 mb-3">Rank #{entry.rank}</p>
+
+                              <div className="w-full space-y-2">
+                                <div className="bg-white bg-opacity-50 rounded-lg p-2">
+                                  <p className="text-2xl font-bold text-gray-900">{entry.activityPoints}</p>
+                                  <p className="text-xs text-gray-600">pts</p>
                                 </div>
-
-                                {/* Avatar */}
-                                <Avatar className="h-10 w-10 border border-border">
-                                  <AvatarFallback className={cn(
-                                    "text-sm font-bold",
-                                    isCurrentUser ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
-                                  )}>
-                                    {entry.name.charAt(0).toUpperCase()}
-                                  </AvatarFallback>
-                                </Avatar>
-
-                                {/* Name and Email */}
-                                <div className="flex-1 min-w-0">
-                                  <div className="flex items-center gap-2">
-                                    <p className={cn(
-                                      "font-semibold truncate",
-                                      isCurrentUser && "text-primary"
-                                    )}>
-                                      {entry.name}
-                                      {isCurrentUser && (
-                                        <Badge variant="outline" className="ml-2 text-xs border-primary text-primary">
-                                          You
-                                        </Badge>
-                                      )}
-                                    </p>
-                                  </div>
-                                  <p className="text-xs text-muted-foreground truncate">{entry.email}</p>
-                                </div>
-
-                                {/* Stats */}
-                                <div className="hidden md:flex items-center gap-6">
-                                  <div className="text-center">
-                                    <p className="text-xs text-muted-foreground mb-1">Points</p>
-                                    <p className="text-sm font-bold flex items-center gap-1">
-                                      <Zap className="h-3 w-3 text-yellow-500" />
-                                      {entry.activityPoints}
-                                    </p>
-                                  </div>
-                                  <div className="text-center">
-                                    <p className="text-xs text-muted-foreground mb-1">Courses</p>
-                                    <p className="text-sm font-bold flex items-center gap-1">
-                                      <BookOpen className="h-3 w-3 text-blue-500" />
-                                      {entry.completedCourses}
-                                    </p>
-                                  </div>
-                                  <div className="text-center">
-                                    <p className="text-xs text-muted-foreground mb-1">Streak</p>
-                                    <p className="text-sm font-bold flex items-center gap-1">
-                                      <Flame className="h-3 w-3 text-orange-500" />
-                                      {entry.dailyStreak}
-                                    </p>
-                                  </div>
-                                </div>
-
-                                {/* Mobile Stats */}
-                                <div className="flex md:hidden items-center gap-3">
-                                  <Badge variant="outline" className="text-xs">
-                                    <Zap className="h-3 w-3 mr-1" />
-                                    {entry.activityPoints}
-                                  </Badge>
-                                  <Badge variant="outline" className="text-xs">
-                                    <BookOpen className="h-3 w-3 mr-1" />
-                                    {entry.completedCourses}
-                                  </Badge>
+                                <div className="bg-white bg-opacity-50 rounded-lg p-2">
+                                  <p className="text-sm font-semibold text-gray-900">
+                                    {entry.completedCourses} {entry.completedCourses === 1 ? 'course' : 'courses'}
+                                  </p>
                                 </div>
                               </div>
-                            </motion.div>
-                          );
-                        })}
-                      </div>
-                    </ScrollArea>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
                   )}
-                </CardContent>
-              </Card>
-            </motion.div>
+
+                  {/* Full Leaderboard List */}
+                  <div className="max-h-[600px] overflow-y-auto space-y-2 pr-2">
+                    {leaderboard.map((entry, index) => {
+                      const isCurrentUser = entry.userId === user?.userId;
+                      const isTop3 = entry.rank <= 3;
+
+                      // Skip top 3 as they're already shown above
+                      if (isTop3) return null;
+
+                      return (
+                        <div
+                          key={entry.userId}
+                          className={`flex items-center gap-4 p-4 rounded-lg border transition-all ${
+                            isCurrentUser
+                              ? 'bg-blue-50 border-blue-300 shadow-md'
+                              : 'bg-gray-50 border-gray-200 hover:bg-gray-100'
+                          }`}
+                        >
+                          {/* Rank */}
+                          <div className="flex-shrink-0 w-12 text-center">
+                            <span className="text-lg font-bold text-gray-700">
+                              #{entry.rank}
+                            </span>
+                          </div>
+
+			                    {/* Avatar */}
+                          <Avatar className="h-10 w-10 border border-border">
+                            <AvatarFallback className={cn(
+                              "text-sm font-bold",
+                              isCurrentUser ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
+                            )}>
+                              {entry.name.charAt(0).toUpperCase()}
+                            </AvatarFallback>
+                          </Avatar>
+
+                          {/* Name and Email */}
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2">
+                              <h3 className="font-semibold text-gray-900 truncate">
+                                {entry.name}
+                              </h3>
+                              {isCurrentUser && (
+                                <span className="inline-block px-2 py-0.5 bg-blue-500 text-white text-xs rounded-full flex-shrink-0">
+                                  You
+                                </span>
+                              )}
+                            </div>
+                            <p className="text-sm text-gray-500 truncate">{entry.email}</p>
+                          </div>
+
+                          {/* Stats - Desktop */}
+                          <div className="hidden md:flex items-center gap-6 flex-shrink-0">
+                            <div className="text-center">
+                              <p className="text-xs text-gray-500 mb-1">Points</p>
+                              <p className="text-lg font-bold text-gray-900">{entry.activityPoints}</p>
+                            </div>
+                            <div className="text-center">
+                              <p className="text-xs text-gray-500 mb-1">Courses</p>
+                              <p className="text-lg font-bold text-gray-900">{entry.completedCourses}</p>
+                            </div>
+                            <div className="text-center">
+                              <p className="text-xs text-gray-500 mb-1">Streak</p>
+                              <p className="text-lg font-bold text-gray-900">{entry.dailyStreak}</p>
+                            </div>
+                          </div>
+
+                          {/* Mobile Stats */}
+                          <div className="flex md:hidden flex-col gap-1 flex-shrink-0 text-right">
+                            <p className="text-sm font-semibold text-gray-900">{entry.activityPoints}</p>
+                            <p className="text-xs text-gray-500">{entry.completedCourses} courses</p>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+            </div>
 
             {/* Enhanced Account Actions Section */}
             <motion.div
